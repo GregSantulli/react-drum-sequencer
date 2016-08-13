@@ -57,6 +57,7 @@ class Sequencer extends Component {
     }
   }
 
+
   incrementPosition(){
     var seq = this
     if (this.state.playing){
@@ -70,7 +71,7 @@ class Sequencer extends Component {
   }
 
   activeIndex(i){
-    return (this.state.position == i && this.state.playing) ? "step-pad active": "step-pad"
+    return (this.state.position == i && this.state.playing) ? "step-pad current": "step-pad"
   }
 
 
@@ -101,7 +102,7 @@ class Sequencer extends Component {
     var steps = []
     for (var i = 0; i < this.props.stepCount; i++) {
       var padClass =
-      steps.push(<div key={i} className={sequencer.activeIndex(i)}>{i + 1}</div>)
+      steps.push(<div key={i} className={sequencer.activeIndex(i)}> • </div>)
     };
 
 

@@ -10,7 +10,7 @@ class Track extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pattern: {},
+      pattern: this.props.pattern || {},
       playing: this.props.playing,
       gain: this.props.context.createGain(),
       volume: 1
@@ -56,7 +56,6 @@ class Track extends Component {
 
   componentDidMount() {
     this.state.gain.connect(this.props.input)
-    this.state.gain.connect(this.props.input)
 
   }
 
@@ -76,8 +75,9 @@ class Track extends Component {
     this.setState({pattern: newPattern})
   }
 
-
-
+  shouldComponentUpdate(newProps, newState){
+    return this.props.position == newProps.position
+  }
 
   padActive(i){
     return !!this.state.pattern[i]

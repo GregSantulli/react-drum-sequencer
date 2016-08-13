@@ -3,28 +3,35 @@
   display: flex
   align-items: center
   justify-content: center
-  height: 50px
-  background-color: blue
-  border: 1px solid red
+  height: 30px
+  border-bottom: 1px solid grey
   .transport-container
     display: flex
     align-items: center
     justify-content: flex-end
     height: 50px
-    background: green
     width: 30%
     height: 100%
     .volume-slider
       width: 30%
+      margin: 5px
     .track-name
+      display: flex
+      align-items: center
+      justify-content: flex-start
       width: 40%
+      height: 100%
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      font-size: 0.8em
+      padding: 5px
     .controls-container
       display: inline-block
   .pad-container
     width: 70%
     display: flex
     height: 100%
-    border: 1px solid blue
     display: inline-block
 
 

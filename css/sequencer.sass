@@ -1,11 +1,9 @@
 .sequencer
   width: 100%
-  border: 1px solid blue
   margin: auto
   .control-panel
     margin: auto
     height: 50px
-    background-color: red
     width: 100%
     display: flex
     .global-controls
@@ -18,22 +16,23 @@
         align-items: center
         justify-content: center
         height: 50px
-        background: green
+        background:
         width: 100px
-
     .step-counter
       display: flex
       align-items: center
       justify-content: center
       height: 50px
+      width: 70%
       .step-pad
-        background: green
         display: inline-block
-        width: 30px
+        width: 6.25%
         text-align: center
-      .step-pad.active
-        background: yellow
+      .step-pad.current
+        color: red
   .track-container
     width: 100%
+    border: 1px solid grey
+
 
 
