@@ -11,8 +11,9 @@ class Track extends Component {
     super(props);
     this.state = {
       pattern: {},
-      playing: this.props.playing
-
+      playing: this.props.playing,
+      gain: this.props.context.createGain(),
+      volume: 1
     }
   }
 
@@ -34,7 +35,7 @@ class Track extends Component {
     if (this.state.buffer) {
       var sound = this.props.context.createBufferSource();
       sound.buffer = this.state.buffer;
-      sound.connect(this.props.context.destination);
+      sound.connect(this.state.gain);
       sound.start(0);
     } else {
       this.loadSound()
@@ -53,7 +54,9 @@ class Track extends Component {
     this.loadSound()
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
+    this.state.gain.connect(this.props.input)
+    this.state.gain.connect(this.props.input)
 
   }
 
@@ -80,6 +83,15 @@ class Track extends Component {
     return !!this.state.pattern[i]
   }
 
+  updateVolume(e){
+    this.setState({volume: e.target.value})
+    this.state.gain.gain.value = e.target.value
+  }
+
+  getVolume(){
+    return this.state.gain.gain.value
+  }
+
 
   render() {
 
@@ -97,6 +109,17 @@ class Track extends Component {
     return (
       <div className="track">
         <div className="transport-container">
+          <input
+            className="volume-slider"
+            onChange={this.updateVolume.bind(this)}
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={this.state.volume} />
+          <div className="track-name">
+            {this.props.name}
+          </div>
           <div className="controls-container">
           </div>
         </div>

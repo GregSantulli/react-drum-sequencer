@@ -14,8 +14,10 @@ class Sequencer extends Component {
       playing: false,
       stepCount: this.props.stepCount,
       tempo: this.props.tempo,
-      sixteenthNoteMs: (60 / this.props.tempo / 4) * 1000
+      sixteenthNoteMs: (60 / this.props.tempo / 4) * 1000,
+      input: this.props.context.createGain()
     }
+    this.state.input.connect(this.props.context.destination)
   }
 
 
@@ -89,17 +91,18 @@ class Sequencer extends Component {
         key={i}
         context={sequencer.props.context}
         path={path}
+        name={path.split('/').reverse()[0]}
         stepLength={sequencer.state.stepCount}
         playing={sequencer.state.playing}
-        position={sequencer.state.position}/>
+        position={sequencer.state.position}
+        input={sequencer.state.input}/>
     });
 
     var steps = []
     for (var i = 0; i < this.props.stepCount; i++) {
       var padClass =
-      steps.push(<div className={sequencer.activeIndex(i)}>{i + 1}</div>)
+      steps.push(<div key={i} className={sequencer.activeIndex(i)}>{i + 1}</div>)
     };
-    console.log(this.props.stepCount)
 
 
 
@@ -109,7 +112,7 @@ class Sequencer extends Component {
       <div className="control-panel">
         <div className="global-controls">
           <div className="play-button" onClick={this.togglePlaying.bind(this)}>
-            PLAY
+            {this.state.playing ? 'STOP' : 'PLAY'}
           </div>
         </div>
         <div className="step-counter">

@@ -23,7 +23,6 @@ class Pad extends Component {
   }
 
   getClassName(){
-    console.log(this.props.active)
     return this.props.active ? "pad active" : "pad"
   }
 
