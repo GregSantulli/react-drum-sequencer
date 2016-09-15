@@ -5,9 +5,6 @@ import Track from './Track.js';
 require('../../css/sequencer.sass')
 import Api from "../actions/api.js"
 
-
-
-
 class Sequencer extends Component {
 
   constructor(props) {
@@ -20,6 +17,8 @@ class Sequencer extends Component {
       input: this.props.context.createGain(),
       tracks: this.props.tracks
     }
+    console.log(props)
+
     this.state.input.connect(this.props.context.destination)
   }
 
@@ -84,7 +83,7 @@ class Sequencer extends Component {
     })
   }
 
-  getPattern(track){
+  decodePattern(track){
     var pattern = {}
     for (var x = 0; x < track.pattern.length; x++) {
       if (track.pattern[x] == "1"){
@@ -94,32 +93,39 @@ class Sequencer extends Component {
     return pattern
   }
 
+
   addTrack(e){
     var fiel = e.target.files[0]
     console.log(this.state.tracks)
   }
 
-  newTrack(audioFile){
-    var tracks = this.state.tracks
-    tracks.push(
-      <Track
-        key={i}
-        context={this.props.context}
-        name={audio_file.name}
-        path={audio_file.url}
-        stepLength={this.state.stepCount}
-        playing={this.state.playing}
-        position={this.state.position}
-        input={this.state.input}/>
-    )
-    this.setState({
-      tracks: tracks
-    })
+  // newTrack(audioFile){
+  //   var tracks = this.state.tracks
+  //   tracks.push(
+  //     <Track
+  //       key={i}
+  //       context={this.props.context}
+  //       name={audio_file.name}
+  //       path={audio_file.url}
+  //       stepLength={this.state.stepCount}
+  //       playing={this.state.playing}
+  //       position={this.state.position}
+  //       input={this.state.input}/>
+  //   )
+  //   this.setState({
+  //     tracks: tracks
+  //   })
+  // }
+
+  changeTrackPattern(x){
+    // console.log(this.props)
+    // console.log(this.state)
+    // console.log(x)
   }
 
 
   getTrack(track, i){
-    var pattern = this.getPattern(track)
+    var pattern = this.decodePattern(track)
     return <Track
       key={i}
       id={track.id}
@@ -127,10 +133,17 @@ class Sequencer extends Component {
       name={track.audio_file.name}
       path={track.audio_file.url}
       pattern={pattern}
+      changeTrackPattern={this.changeTrackPattern.bind(this)}
       stepLength={this.state.stepCount}
       playing={this.state.playing}
       position={this.state.position}
       input={this.state.input}/>
+  }
+
+  saveSequence(){
+    console.log(this.props)
+    console.log(this.state)
+    Api.saveSequence(this)
   }
 
 
@@ -160,6 +173,13 @@ class Sequencer extends Component {
       <div className="control-panel">
         <div className="global-controls">
 
+          <span className="save-sequence glyphicon glyphicon-floppy-disk"
+            aria-hidden="true"
+            type="file"
+            accept="audio/wav"
+            onClick={this.saveSequence.bind(this)} >
+          </span>
+
           <input
             className="tempo-slider"
             onChange={this.updateTempo.bind(this)}
@@ -168,6 +188,10 @@ class Sequencer extends Component {
             max="160"
             step="1"
             value={this.state.tempo} />
+
+            <div className="tempo-display">
+              {this.state.tempo} BPM
+            </div>
 
           <div className="play-button" onClick={this.togglePlaying.bind(this)}>
             {this.startButtonIcon()}

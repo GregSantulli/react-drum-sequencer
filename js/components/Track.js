@@ -38,7 +38,6 @@ class Track extends Component {
     request.send();
   }
 
-
   playSound() {
     if (this.state.buffer) {
       var sound = this.props.context.createBufferSource();
@@ -82,10 +81,10 @@ class Track extends Component {
 
   }
 
-
   changePattern(i){
     var newPattern = this.state.pattern
     newPattern[i] = !newPattern[i]
+    this.props.changeTrackPattern(this)
     this.setState({pattern: newPattern})
   }
 
@@ -127,7 +126,6 @@ class Track extends Component {
         console.log(e)
       })
 
-
     // // use below to temorarily add lcoal file to sequencer without uploading to s3
     // var track = this
     // var reader = new FileReader();
@@ -157,7 +155,6 @@ class Track extends Component {
     }
     Api.call('POST', '/tracks', params)
       .then(function(data){
-        console.log("fuccccboi")
         console.log(data)
       })
       .catch(function(e){

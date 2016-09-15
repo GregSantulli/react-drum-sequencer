@@ -191,13 +191,19 @@ Api.prototype.uploadFileToS3 = function(file){
       var request = new XMLHttpRequest();
       request.open('PUT', data.url, true);
       request.onload = function(data) {
-        console.log(data)
         request.status === 200 ? resolve(data) : reject(request)
       };
       request.send(file);
     })
   })
   return promise
+}
+
+
+Api.prototype.saveSequence = function(sequence){
+  var api = this
+    , sequenceId = sequence.props.id
+  api.call('PUT', '/sequences/' + sequenceId)
 }
 
 export default new Api

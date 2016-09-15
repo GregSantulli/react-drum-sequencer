@@ -12,55 +12,56 @@ var context = new AudioContext();
 
 
 export default class App extends React.Component {
-
-    constructor(props) {
-      super(props);
-      this.state = {
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
     }
+  }
+  setSequencer(){
+  }
 
-    setSequencer(){
-
-    }
-
-    componentWillMount() {
-      var app = this
-      Api.getInitialSequence()
-        .then(function(data){
-
-          app.setState({
-            tracks: data.tracks,
-          })
+  componentWillMount() {
+    var app = this
+    Api.getInitialSequence()
+      .then(function(data){
+        app.setState({
+          tracks: data.tracks,
+          id: data.id
         })
-        .catch(function(e){
-          console.log(e)
-        })
-    }
-
-    loadSound(sound){
-      var tracks = this.state.tracks
-      console.log(sound)
-      tracks.push({
-        audio_file: sound,
-        pattern: "0000000000000000"
       })
-      this.setState({
-        tracks: tracks
+      .catch(function(e){
+        console.log(e)
       })
-    }
+  }
+
+  loadSound(sound){
+    var tracks = this.state.tracks
+    console.log(sound)
+    tracks.push({
+      audio_file: sound,
+      pattern: "0000000000000000"
+    })
+    this.setState({
+      tracks: tracks
+    })
+  }
 
 
-
-
-    render() {
-        return (
-            <div>
-                <Sequencer context={context} tracks={this.state.tracks} tempo="95" stepCount="16"></Sequencer>
-                <FileBrowser loadSound={this.loadSound.bind(this)} />
-                <div>{ this.props.children }</div>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <Sequencer
+          context={context}
+          tracks={this.state.tracks}
+          id={this.state.id}
+          tempo="95"
+          stepCount="16">
+        </Sequencer>
+        <FileBrowser loadSound={this.loadSound.bind(this)} />
+        <div>{ this.props.children }</div>
+      </div>
+    );
+  }
 }
 
 var routes = (
