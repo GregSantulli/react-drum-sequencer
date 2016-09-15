@@ -1,7 +1,7 @@
 "use strict";
 
 import React, { Component } from 'react';
-import Api from "../actions/api.js"
+// import Api from "../actions/api.js"
 require('../../css/app.sass')
 
 
@@ -17,16 +17,16 @@ class Table extends Component {
   }
 
 
-  componentWillMount() {
-    var _this = this
-    this.serverRequest = Api.get('/records').then((response) => {
-      if (response.status == 200){
-        response.json().then((json) => {
-          this.setRecords(json)
-        })
-      }
-    })
-  }
+  // componentWillMount() {
+  //   var _this = this
+  //   this.serverRequest = Api.get('/records').then((response) => {
+  //     if (response.status == 200){
+  //       response.json().then((json) => {
+  //         this.setRecords(json)
+  //       })
+  //     }
+  //   })
+  // }
 
   componentWillUnmount() {
     this.serverRequest.abort();

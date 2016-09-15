@@ -1,24 +1,37 @@
 "use strict";
 
 import React, { Component } from 'react';
-
 import Api from "../actions/api.js"
+
+
+// import Api from "../actions/api.js"
 
 require('../../css/app.sass')
 require('../../css/bootstrap.css')
 
-class Signin extends Component {
+class SignIn extends Component {
 
 
   constructor(props) {
       super(props);
       this.state = {
-          email: "",
-          password: "",
-          password_confirmation: "",
-          hasSubmitted: false,
-          errors: {},
+
       };
+  }
+
+
+  signIn(e){
+    e.preventDefault()
+    var signIn = this
+    Api.signIn({
+      email: this.state.email,
+      password: this.state.password
+    }).then(function(response){
+      signIn.props.setUser(response.data)
+    }).catch(function(e){
+      console.log("SIGN IN ERROR")
+      console.log(e)
+    })
   }
 
   render() {
@@ -32,17 +45,15 @@ class Signin extends Component {
           className='form-control'
           type='email'
           placeholder="example@email.com"
-          onChange={(event) => this.setState({email: event.nativeEvent.text})}
-          value={this.state.email}/>
+          onChange={(e) => this.setState({email: e.target.value})}/>
 
           <div className="input-label"> PASSWORD </div>
           <input
             className='form-control'
             type="password"
-            onChange={(event) => this.setState({password: event.nativeEvent.text})}
-            value={this.state.password} />
+            onChange={(e) => this.setState({password: e.target.value})}/>
 
-          <button className="submit btn btn-success">
+          <button className="submit btn btn-success" onClick={this.signIn.bind(this)}>
             <div>SIGN IN</div>
           </button>
 
@@ -55,4 +66,4 @@ class Signin extends Component {
 
 
 
-export default Signin
+export default SignIn
