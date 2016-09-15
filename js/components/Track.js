@@ -91,7 +91,6 @@ class Track extends Component {
   shouldComponentUpdate(newProps, newState){
     var newFile = this.state.path != newState.path
     var newPosition = this.props.position == newProps.position
-    // console.log(newFile || newPosition)
     return newFile || newPosition
   }
 

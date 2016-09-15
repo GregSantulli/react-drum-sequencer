@@ -36,7 +36,6 @@ class FileBrowser extends Component {
   handleFileClick(){
     this.setState({
     })
-
   }
 
 

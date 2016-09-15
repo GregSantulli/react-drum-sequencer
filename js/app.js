@@ -21,17 +21,7 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    var app = this
-    Api.getInitialSequence()
-      .then(function(data){
-        app.setState({
-          tracks: data.tracks,
-          id: data.id
-        })
-      })
-      .catch(function(e){
-        console.log(e)
-      })
+
   }
 
   loadSound(sound){
@@ -52,8 +42,6 @@ export default class App extends React.Component {
       <div>
         <Sequencer
           context={context}
-          tracks={this.state.tracks}
-          id={this.state.id}
           tempo="95"
           stepCount="16">
         </Sequencer>
@@ -64,14 +52,9 @@ export default class App extends React.Component {
   }
 }
 
-var routes = (
-    <Router history={browserHistory}>
-      <Route path="/" component={App}>
-      </Route>
-    </Router>
-);
 
 
 
-render(routes, document.getElementById('app'));
+
+render(<App/>, document.getElementById('app'));
 

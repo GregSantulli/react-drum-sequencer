@@ -15,16 +15,29 @@ class Sequencer extends Component {
       tempo: this.props.tempo,
       sixteenthNoteMs: (60 / this.props.tempo / 4) * 1000,
       input: this.props.context.createGain(),
-      tracks: this.props.tracks
     }
-    console.log(props)
-
     this.state.input.connect(this.props.context.destination)
   }
 
-  componentWillUnmount() {
+  componentDidUpdate() {
+    var seq = this
+    Api.getInitialSequence()
+      .then(function(data){
+        var allTracks;
+        if (data.tracks){
+          allTracks = data.tracks.map(function(sound, i) {
+            return seq.getTrack(sound, i)
+          });
+        }
+        seq.setState({
+          tracks: allTracks,
+          id: data.id
+        })
+      })
+      .catch(function(e){
+        console.log(e)
+      })
   }
-
 
   componentDidMount() {
     this.setState({
@@ -48,10 +61,6 @@ class Sequencer extends Component {
   componentWillUnmount(){
     clearTimeout(this.state.timeout)
   }
-
-  componentDidUpdate(){
-  }
-
 
   incrementPosition(){
     var seq = this
@@ -118,9 +127,8 @@ class Sequencer extends Component {
   // }
 
   changeTrackPattern(x){
-    // console.log(this.props)
-    // console.log(this.state)
-    // console.log(x)
+    console.log(this.state)
+    console.log(x)
   }
 
 
@@ -143,29 +151,19 @@ class Sequencer extends Component {
   saveSequence(){
     console.log(this.props)
     console.log(this.state)
-    Api.saveSequence(this)
+    // Api.saveSequence(this)
   }
 
 
 
   render() {
 
-
     var sequencer = this
-
-    var allTracks;
-
-    if (this.props.tracks){
-      allTracks = this.props.tracks.map(function(sound, i) {
-        return sequencer.getTrack(sound, i)
-      });
-    }
 
     var steps = []
     for (var i = 0; i < this.props.stepCount; i++) {
       steps.push(<div key={i} className={sequencer.activeIndex(i)}> • </div>)
     };
-
 
     return (
 
@@ -204,7 +202,7 @@ class Sequencer extends Component {
       </div>
 
         <div className="track-container">
-          {allTracks}
+          {this.state.tracks}
         </div>
 
 
