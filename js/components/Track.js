@@ -81,6 +81,8 @@ class Track extends Component {
 
   }
 
+
+
   changePattern(i){
     var newPattern = this.state.pattern
     newPattern[i] = !newPattern[i]

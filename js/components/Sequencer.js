@@ -15,34 +15,10 @@ class Sequencer extends Component {
       tempo: this.props.tempo,
       sixteenthNoteMs: (60 / this.props.tempo / 4) * 1000,
       input: this.props.context.createGain(),
+      tracks: this.props.tracks,
+      position: 0
     }
     this.state.input.connect(this.props.context.destination)
-  }
-
-  componentDidUpdate() {
-    var seq = this
-    Api.getInitialSequence()
-      .then(function(data){
-        var allTracks;
-        if (data.tracks){
-          allTracks = data.tracks.map(function(sound, i) {
-            return seq.getTrack(sound, i)
-          });
-        }
-        seq.setState({
-          tracks: allTracks,
-          id: data.id
-        })
-      })
-      .catch(function(e){
-        console.log(e)
-      })
-  }
-
-  componentDidMount() {
-    this.setState({
-      position: 0
-    })
   }
 
   togglePlaying(){
@@ -102,9 +78,18 @@ class Sequencer extends Component {
     return pattern
   }
 
+  encodePattern(track){
+    var pattern = track.pattern
+    var encodedString = ''
+    for (var i = 0; i < 15; i++) {
+      encodedString += (pattern[i] ? '1' : '0')
+    };
+    console.log(encodedString)
+    return encodedString
+  }
 
   addTrack(e){
-    var fiel = e.target.files[0]
+    var file = e.target.files[0]
     console.log(this.state.tracks)
   }
 
@@ -133,14 +118,14 @@ class Sequencer extends Component {
 
 
   getTrack(track, i){
-    var pattern = this.decodePattern(track)
+    track.pattern = this.decodePattern(track)
     return <Track
       key={i}
       id={track.id}
       context={this.props.context}
       name={track.audio_file.name}
       path={track.audio_file.url}
-      pattern={pattern}
+      pattern={track.pattern}
       changeTrackPattern={this.changeTrackPattern.bind(this)}
       stepLength={this.state.stepCount}
       playing={this.state.playing}
@@ -151,19 +136,38 @@ class Sequencer extends Component {
   saveSequence(){
     console.log(this.props)
     console.log(this.state)
-    // Api.saveSequence(this)
-  }
+    var seq = this
+    var tracks = this.props.tracks
+    var trackParams = []
+    console.log(tracks)
 
+    for (var track in tracks){
+      var currentTrack = tracks[track]
+      currentTrack.pattern = seq.encodePattern(currentTrack)
+      trackParams.push(currentTrack)
+    }
+
+    Api.saveSequence(this, trackParams)
+  }
 
 
   render() {
 
     var sequencer = this
+      , tracks = sequencer.props.tracks
+      , steps = []
+      , allTracks = []
 
-    var steps = []
     for (var i = 0; i < this.props.stepCount; i++) {
       steps.push(<div key={i} className={sequencer.activeIndex(i)}> • </div>)
     };
+
+
+    if (tracks){
+      for (var track in tracks) {
+        allTracks.push( sequencer.getTrack(tracks[track], track) )
+      }
+    }
 
     return (
 
@@ -202,7 +206,7 @@ class Sequencer extends Component {
       </div>
 
         <div className="track-container">
-          {this.state.tracks}
+          {allTracks}
         </div>
 
 

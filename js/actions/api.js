@@ -200,10 +200,14 @@ Api.prototype.uploadFileToS3 = function(file){
 }
 
 
-Api.prototype.saveSequence = function(sequence){
+Api.prototype.saveSequence = function(sequence, trackParams){
   var api = this
     , sequenceId = sequence.props.id
-  api.call('PUT', '/sequences/' + sequenceId)
+    , params = {}
+    params.sequence = {}
+    params.sequence.tracks_attributes = trackParams
+
+  api.call('PUT', '/sequences/' + sequenceId, params)
 }
 
 export default new Api
